@@ -1,5 +1,5 @@
 # Lambda Forge
-`lambdaforge` is a Python package for sampling large random lambda terms. It is based on the theory of random processes, which ensures an efficient contiguous representation in memory. Each term is encoded by four numpy arrays. The package provides tools for visualizing, reducing, and printing lambda terms.
+`lambdaforge` is a Python package for sampling large random lambda terms. It is based on the theory of random processes, which ensures an efficient representation with a contiguous block of memory. Each term is encoded by four numpy arrays. The package provides tools for visualizing, reducing, and printing lambda terms.
 
 ## Installation
 
