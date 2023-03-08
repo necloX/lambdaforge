@@ -24,9 +24,9 @@ Fundamentaly, we see a lambda term as a tree where the leafs (the `variable`) ar
 For a reference on random trees encoded by random processes see T. Duquesne et J.-F. Le Gall, Random Trees, Lévy Processes and Spatial Branching Processes. A related notion is the one of Bolzman samplers (see ). While they are fundamentaly equivalent, Boltzman samplers emphasises the recursive nature of trees, while trees encoded by process emphasis the imperative nature of tree traversal.
 
 ### How the encoding work
-Trees underlying lambda terms are traversed in a depth first manner. Traditionnaly, in the study of random trees, we encode them via their `height process`:
-For each node, we keep track of its distance from the root. It can be shown that it totally encode a tree.
-For instance, we can check if a node `a` is on the path from the root to `b` by checking if the height process reach a minimum between the visit of the two. We can recover that information by keeping track of the closest node of size 2, eg applications, from which we are a subterm of the function side. We call that vector the `application_kernel`. This process also totally encode the tree and the tree. We can recover the height process by integrating the vector `(1,...,1)` against this kernel where integrating against the `application_kernel`, which means:
+Here, the term process refers to a vector of size `n` that encode a given tree. Trees underlying lambda terms Traditionnaly, in the study of random trees, we encode them via their `height` process: nodes are visited in a depth first manner and we keep track of their distance from the root, their 'height'. It can be shown that this process totally encode a given tree. For instance, we can check if a node `a` is on the path from the root to `b` by checking if the height process reach a minimum between the visit of the two. 
+
+Another way to encode a tree, is to keep track of the closest node of size 2, eg applications, from which we are a subterm on the function side. We call that vector the `application_kernel`. This process also totally encode the tree. We can recover the height process by *integrating* the vector `(np.ones(n)` against this kernel where *integrating* which means computing the folowing function:
 
 ```
 @nb.njit
@@ -42,12 +42,10 @@ def forward_integral(application_kernel:np.array(np.int64),kind:np.array(np.int6
             h[i+1] = h[application_kernel[i]]+v[i]
     return h
 ``` 
-For convenience, we also define the `abstraction_kernel` and the `variable_kernel`, even if our `application_kernel` totally encode the tree. Integrating divers vectors is a fundamental way of interracting with `lambdaforge`. For instance, the default layout of the visualization module is computed with the help of two integrations:
-```
-var = lambda_term.variables()
-x_pos = lambda_term.backward_integral(np.cumsum(var) * var) /lambda_term.backward_integral(var)
-y_pos = lambda_term.height()
-```
+This `forward_integral` method iteratively compute the cumulative sum of `v` along the ancestors node of a given node. For convenience, we also define the `abstraction_kernel` and the `variable_kernel`, even if our `application_kernel` totally encode the tree. Integrating diverse vectors is a fundamental way of interracting with `lambdaforge`. 
+
+### Resolving bindings by integration process
+A fundamental example gives us a way to compute the bindings of a lambda terms. If `abs` is an indicator vector of abstractions, integrating `abs` against the 
 
 ## License
 
