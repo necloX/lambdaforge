@@ -44,7 +44,7 @@ def forward_integral(application_kernel:np.array(np.int64),kind:np.array(np.int6
 ``` 
 This `forward_integral` method iteratively compute the cumulative sum of `v` along the ancestors of a given node. For convenience, we also define the `abstraction_kernel` and the `variable_kernel`, even if our `application_kernel` totally encode the tree. Integrating diverse vectors against diverse kernels is a fundamental way of interacting with lambdaforge as illustrated in the following example.
 
-### Resolving bindings by integration process
+### Resolving bindings by integrating processes
 If `abs` is an indicator vector of abstractions, integrating `abs` gives us `habs`, a process representing the number of abstraction under each node. Note that `variable_kernel` gives for each index `a`, the rightmost variable in the subterm at `a`.
 
 To know if a variable at index `v` is binded to an abstraction at index `a`, we only need to check  that 
