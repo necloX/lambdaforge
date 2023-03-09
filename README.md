@@ -13,7 +13,7 @@ To generate a random lambda term, use the `craft` method of the `Forge`
 import lambdaforge as lf
 import lambdaforge.production as pr
 l = lf.forge.Forge(8,16).craft()
-print(pr.parenthesis_de_bruijin(l))
+print(pr.parenthesis_de_bruijn(l))
 ```
 This will sample a lambda term of size between 8 and 16 and print it with De Bruijn indices. The distribution of the underlying tree is that of a critical Bienaymé-Galton-Watson tree.
 
