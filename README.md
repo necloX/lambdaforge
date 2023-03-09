@@ -15,7 +15,7 @@ import lambdaforge.production as pr
 l = lf.forge.Forge(8,16).craft()
 print(pr.parenthesis_de_bruijin(l))
 ```
-This will sample a lambda term of size between 8 and 16 and print it with De Bruijn indices.
+This will sample a lambda term of size between 8 and 16 and print it with De Bruijn indices. The distribution of the underlying tree is that of a critical Bienaymé-Galton-Watson tree.
 
 ## Random process and random trees
 
@@ -24,9 +24,9 @@ A lambda term is viewed as a tree with leaves (variables) decorated by De Bruijn
 For a reference on random trees encoded by random processes, see T. Duquesne et J.-F. Le Gall, [Random Trees, Lévy Processes and Spatial Branching Processes](https://www.imo.universite-paris-saclay.fr/~jean-francois.le-gall/Mono-revised.pdf)). A related notion is that of Boltzmann samplers, see Pierre Lescanne, [Boltzmann samplers for random generation of lambda terms](https://hal-ens-lyon.archives-ouvertes.fr/ensl-00979074v2). While these are fundamentally equivalent, Boltzmann samplers emphasize the recursive nature of trees, while the encoding process iterative the imperative nature of tree traversal.
 
 ### How the encoding works
-The term "process" refers to a vector of size n that encodes a given tree of size n. Traditionally, random trees are encoded via their "height" process: nodes are visited in a depth-first manner, and the process represent their distance from the root (their "height"). It can be shown that this process totally encodes a given tree. For instance, we can check if a node a is on the path from the root to b by checking if the height process reaches a minimum between the visits of the two.
+The term "process" refers to a vector of size n that encodes a given tree of size n. Traditionally, random trees are encoded via their "height" process: nodes are visited in a depth-first manner, and the process represent their distance from the root (their "height"). It can be shown that this process totally encodes a given tree. For instance, we can check if a node a is on the path from the root to b by checking if the height process reaches a minimum between the visits of the two. A celebrated result for critical Bienaymé-Galton-Watson trees is the convergence of such process toward a Brownian excursion, which lead, in the 90s to the theory of continuous random trees from David Aldous.
 
-Another way to encode a tree, the `application_kernel`, is to keep track, for each index `i` of the closest node `application_kernel[i]` of size 2 (e.g., applications) for which `i` is in the subterm on the function side of the application. This process also totally encodes the tree. We can recover the height process by "integrating" the vector (np.ones(n)) against this kernel  where integrating means computing the following function, which is at the heart of this project:
+Another way to encode a tree is to keep track, for each index `i` of the closest application `application_kernel[i]` for which `i` is in the subterm on the function side. This process also totally encodes the tree. We can recover the height process by "integrating" the vector (np.ones(n)) against this kernel  where integrating means computing the following function, which is at the heart of this project:
 ```
 # the kind of each node (-1 for variables, 0 for abstractions and 1 for applications) can be easily computed from application_kernel
 @nb.njit
@@ -51,6 +51,10 @@ To know if a variable at index `v` is binded to an abstraction at index `a`, we 
 - `a <= v <= variable_kernel[a]` which means that `v` is in the subterm at index `a`
 - `de_bruijn_indices[v] == habs[v]-habs[a]`
 
+## Plan for future development
+- The obvious next thing to do is to implement samplers than Bienaymé-Galton-Watson trees and geometric De Bruijn indices. The way the `Forge` works makes it rather easy, just write classes that implement `sample_nodes`for trees and `sample_de_bruij` for indices.
+- There is potential for expanding `lambdaforge` to support other process calculi, such as the pi calculus or pattern calculus.
+- Another area for future improvement is in the representation of reduction in the system. Currently, `lambdaforge` recomputes the term at each step of reduction, which can be computationally expensive. Ideally we would like a representation of reduction tgrough a view of the original term, which would be compositional and with a small memory footprint.
 ## License
 
 This project is licensed under the MIT License.
