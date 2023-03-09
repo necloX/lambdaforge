@@ -3,7 +3,7 @@
 
 ## Installation
 
-You can install it by cloning this repository and running pip install `path_to_your_clone`.
+You can install it by cloning this repository and running `pip install path_to_your_clone`.
 
 ## Usage
 
