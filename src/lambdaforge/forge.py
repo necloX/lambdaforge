@@ -18,7 +18,7 @@ class CGBW_tree:
 # a sampler for De Bruijn indices with geometric distribution
 @dataclass
 class Geometric:
-    p:float = 0.2
+    p:float = 0.05
     
     # method to sample De Bruijn indices
     def sample_de_bruijn(self, size: np.int64):

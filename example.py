@@ -1,38 +1,44 @@
 import matplotlib.pyplot as plt
-from lambdaforge.forge import Forge
+from lambdaforge.forge import Forge, Geometric, CGBW_tree
 from lambdaforge import production as pr, visualization as vs, reduction as rd
-
-k = 24
+import numpy as np
+k = 16
 n = 2**k
-l = Forge(n,2*n).craft()
+forge = Forge(n,
+              2*n)
+l0 = forge.craft()
 fig, ax = plt.subplots(1, 1)
-vs.draw(l,fig,ax,edge_width = 0.1,binding_width = 0.3,edge_color='lightblue',dot_size=5,binding_alpha=0.2)
-fig.set_size_inches(10, 40)
+vs.draw(l0,fig,ax,edge_width = 0.5,binding_width = 2,edge_color='lightblue',dot_size=2,binding_alpha=0.1)
+fig.set_size_inches(10, 20)
 #print(pr.polish_de_bruijin(l))
 #vs.draw(rd.reduce_normal_order_step(l),fig,ax2)
 
-'''
-t = 50000
+l=l0
+t = 5000
 k = 50
 area = np.zeros(t//k)
 mass = np.zeros(t//k)
+
 for i in range(t):
     
-    print(i)
-    print(l.size)
+    
     if i%k == 0 :
-        fig = draw(l)
-        plt.savefig(f"plot_{i}.png", dpi=300, bbox_inches='tight')
+        print(i)
+        print(l.size)
+        fig, ax = plt.subplots(1, 1)
+        vs.draw(l,fig,ax,edge_width = 0.5,binding_width = 1.6,edge_color='lightblue',dot_size=2,binding_alpha=0.1)
+        fig.set_size_inches(10, 20)
+        plt.savefig(f"plot_{i+5000}.png", dpi=300, bbox_inches='tight')
         plt.close(fig)
         area[i//k] = np.sum(l.height())
         mass[i//k] = l.size
-    l = reduce(l)
+    l = rd.reduce_applicative_order_step(l)
     if l.size > 4*n : 
         break
 
 plt.plot(np.arange(t//k),area)
 plt.plot(np.arange(t//k),mass)
-'''
+
 #l2.draw(fig,ax2,edge_color='lightblue',dot_size=500,binding_alpha=0.5)
 #ax2.patch.set_facecolor('black')
 

@@ -3,7 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name='lambdaforge',
     version='0.1',
-    packages=find_packages('src'),
+    packages=['lambdaforge'],
+    package_dir={'':'src'},
     url='',
     license='',
     author='Neclo',
