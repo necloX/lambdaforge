@@ -17,18 +17,18 @@ import lambdaforge.production as pr
 l = lf.forge.Forge(8,16).craft()
 print(pr.parenthesis_de_bruijn(l))
 ```
-This will sample a lambda term of size between 8 and 16 and print it with De Bruijn indices. The distribution of the underlying tree is that of a critical Bienaymé-Galton-Watson tree.
+This will sample a lambda term of size between 8 and 16 and print it with De Bruijn indices. The underlying tree is a critical Bienaymé-Galton-Watson tree.
 
 ## Random process and random trees
 
 A lambda term is viewed as a tree with leaves (variables) decorated by De Bruijn indices. All other nodes are either abstractions (which have a unique child) or applications (which have two children: the argument and the function).
 
-For a reference on random trees encoded by random processes, see T. Duquesne et J.-F. Le Gall, [Random Trees, Lévy Processes and Spatial Branching Processes](https://www.imo.universite-paris-saclay.fr/~jean-francois.le-gall/Mono-revised.pdf)). A related notion is that of Boltzmann samplers, see Pierre Lescanne, [Boltzmann samplers for random generation of lambda terms](https://hal-ens-lyon.archives-ouvertes.fr/ensl-00979074v2). While these are fundamentally equivalent, Boltzmann samplers  the recursive nature of trees, while the encoding process emphasize the iterative nature of tree traversal.
+For a reference on random trees encoded by random processes, see T. Duquesne and J.-F. Le Gall, [Random Trees, Lévy Processes and Spatial Branching Processes](https://www.imo.universite-paris-saclay.fr/~jean-francois.le-gall/Mono-revised.pdf)). A related notion is that of Boltzmann samplers, see Pierre Lescanne, [Boltzmann samplers for random generation of lambda terms](https://hal-ens-lyon.archives-ouvertes.fr/ensl-00979074v2). While these are fundamentally equivalent, Boltzmann samplers enphasize the recursive nature of trees, while the encoding process emphasize the iterative nature of tree traversal.
 
 ### How the encoding works
 The term "process" refers to a vector of integers of size n that encodes a given tree of size n. Traditionally, random trees are encoded via their "height" process: nodes are visited in a depth-first manner, and the process represent their distance from the root (their "height"). It can be shown that this process totally encodes a given tree. For instance, we can check if a node `a` is on the path from the root to `b` by checking if the height process reaches a minimum between the visits of the two. 
 
-A celebrated result concerning critical Bienaymé-Galton-Watson trees is the convergence of such processes toward Brownian excursions, which lead in the 90s to David Aldous' theory of continuouum random trees.
+A celebrated result concerning critical Bienaymé-Galton-Watson trees is the convergence of such processes toward Brownian excursions, which lead in the 90s to David Aldous' theory of continuum random trees.
 
 Another way to encode a tree is to keep track, for each index `i` of the closest application `application_kernel[i]` for which `i` is in the subterm on the function side. This process also totally encodes the tree. We can recover the height process by "integrating" the vector `numpy.ones(n)` against this kernel,  where integrating means computing the following function, which is at the heart of this project:
 ```
@@ -44,7 +44,7 @@ def forward_integral(application_kernel:np.array(np.int64),kind:np.array(np.int6
             h[i+1] = h[application_kernel[i]]+v[i]
     return h
 ``` 
-This `forward_integral` method iteratively compute the cumulative sum of `v` along the ancestors of a given node. For convenience, we also define an `abstraction_kernel` and a `variable_kernel`, even if our `application_kernel` totally encode the tree. Integrating diverse vectors against diverse kernels is a fundamental way of interacting with lambdaforge as illustrated in the following example.
+This `forward_integral` method iteratively computes the cumulative sum of `v` along the ancestors of a given node. For convenience, we also define an `abstraction_kernel` and a `variable_kernel`, even if our `application_kernel` totally encode the tree. Integrating diverse vectors against diverse kernels is a fundamental way of interacting with lambdaforge as illustrated in the following example.
 
 ### Resolving bindings by integrating processes
 If `abs` is an indicator vector of abstractions, integrating `abs` gives us `habs`, a process representing the number of abstraction under each node. Note that `variable_kernel` gives for each index `a`, the rightmost variable in the subterm at `a`.
