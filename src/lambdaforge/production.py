@@ -46,10 +46,9 @@ def parenthesis_named(l:Lambda,abs_names,free_var_names):
                                       '(')))
     return ''.join(word)
 
-def polish_named(l:Lambda,abs_names,free_var_names):
+def polish_named(l:Lambda,abs_names,free_var_names,lambda_sym='λ',app_sym='@'):
     b = l.bindings()
     n = -np.min(b) + np.sum(l.abstractions())
-    print(n)
     
     if(abs_names.size < np.sum(l.abstractions())): 
         print('not enough abstraction names')
@@ -59,8 +58,8 @@ def polish_named(l:Lambda,abs_names,free_var_names):
         return 'fail'
     
     abstraction_names = abs_names[np.cumsum(l.abstractions())-1]
-    abstraction_names_with_lambda = np.char.add('λ',abstraction_names)
-    var_names = abstraction_names[b]
+    abstraction_names_with_lambda = np.char.add(lambda_sym+' ',abstraction_names)
+    var_names = abstraction_names[b * l.bounded_var()]
     free_var_names = free_var_names[ (l.de_bruijn_indices-l.height_abs()) * l.free_var()]
     word = np.where(l.bounded_var(), var_names,
                     np.where(l.free_var(),free_var_names,
